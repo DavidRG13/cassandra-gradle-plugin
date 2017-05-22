@@ -7,14 +7,17 @@ import org.gradle.api.Task
 
 class GradleCassandraPlugin implements Plugin<Project> {
 
+    static final String PLUGIN_EXTENSION_NAME = 'cassandra'
     static final String TASK_GROUP_NAME = 'Cassandra'
 
     @Override
     void apply(final Project project) {
         addStartEmbeddedCassandraTask(project)
 
+        extendAllTasksWithCassandraOptions(project)
+
         project.afterEvaluate {
-            configureTasksRequiringMongoDb(project)
+            configureTasksRequiringCassandra(project)
         }
     }
 
@@ -24,7 +27,22 @@ class GradleCassandraPlugin implements Plugin<Project> {
         }
     }
 
-    private static Iterable<Task> configureTasksRequiringMongoDb(Project project) {
+    private static void extendAllTasksWithCassandraOptions(Project project) {
+        project.tasks.each {
+            extend(it)
+        }
+
+        project.tasks.whenTaskAdded {
+            extend(it)
+        }
+    }
+
+    private static void extend(Task task) {
+        task.ext.runWithCassandra = false
+        task.extensions.add(PLUGIN_EXTENSION_NAME, GradleCassandraPluginExtension)
+    }
+
+    private static Iterable<Task> configureTasksRequiringCassandra(Project project) {
         project.tasks.each {
             def task = it
             if (task.runWithCassandra) {
@@ -36,6 +54,10 @@ class GradleCassandraPlugin implements Plugin<Project> {
     }
 
     private static startCassandra() {
-        EmbeddedCassandraServerHelper.startEmbeddedCassandra(120_000L)
+        try {
+            EmbeddedCassandraServerHelper.startEmbeddedCassandra('/cassandra.yaml', 120_000L)
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
     }
 }
