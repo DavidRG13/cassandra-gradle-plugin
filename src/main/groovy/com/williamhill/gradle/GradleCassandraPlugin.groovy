@@ -12,6 +12,8 @@ class GradleCassandraPlugin implements Plugin<Project> {
 
     @Override
     void apply(final Project project) {
+        project.dependencies.create("org.apache.cassandra:cassandra-all:3.9")
+        project.dependencies.create("com.datastax.cassandra:cassandra-driver-core:3.2.0")
         addStartEmbeddedCassandraTask(project)
 
         extendAllTasksWithCassandraOptions(project)
