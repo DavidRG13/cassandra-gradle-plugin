@@ -25,6 +25,7 @@ class CassandraPluginTasksSpec extends Specification {
                         }
                         dependencies {
                             classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
+                            classpath "org.cassandraunit:cassandra-unit:3.1.4.0-SNAPSHOT"
                             classpath "org.apache.cassandra:cassandra-all:3.10"
                             classpath "com.datastax.cassandra:cassandra-driver-core:3.2.0"
                         }
@@ -32,6 +33,10 @@ class CassandraPluginTasksSpec extends Specification {
 
                     apply plugin: 'java'
                     apply plugin: com.williamhill.gradle.GradleCassandraPlugin
+                    
+                    cassandra {
+                        timeout 200000
+                    }
                     
                     repositories {
                         jcenter()
@@ -46,7 +51,7 @@ class CassandraPluginTasksSpec extends Specification {
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
-                .withArguments("startCassandra", "-S")
+                .withArguments("startCassandra", "-S", "-Dorg.gradle.testkit.debug=true")
                 .build()
 
         then:

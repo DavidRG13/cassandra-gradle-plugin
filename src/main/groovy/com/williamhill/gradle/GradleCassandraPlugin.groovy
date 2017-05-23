@@ -27,7 +27,7 @@ class GradleCassandraPlugin implements Plugin<Project> {
 
     private static void addStartEmbeddedCassandraTask(Project project) {
         project.task(group: TASK_GROUP_NAME, description: 'Start an embedded Cassandra instance', 'startCassandra').doFirst {
-            startCassandra()
+            startCassandra(project)
         }
     }
 
@@ -51,15 +51,16 @@ class GradleCassandraPlugin implements Plugin<Project> {
             def task = it
             if (task.runWithCassandra) {
                 task.doFirst {
-                    startCassandra()
+                    startCassandra(project)
                 }
             }
         }
     }
 
-    private static startCassandra() {
+    private static startCassandra(final Project project) {
+        def pluginExtension = project[PLUGIN_EXTENSION_NAME] as GradleCassandraPluginExtension
         try {
-            EmbeddedCassandraServerHelper.startEmbeddedCassandra('/cassandra.yaml', 120_000L)
+            EmbeddedCassandraServerHelper.startEmbeddedCassandra('/cassandra.yaml', pluginExtension.timeout)
         } catch (Exception e) {
             e.printStackTrace()
         }
