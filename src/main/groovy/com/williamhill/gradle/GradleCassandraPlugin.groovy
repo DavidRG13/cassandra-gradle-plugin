@@ -17,6 +17,7 @@ class GradleCassandraPlugin implements Plugin<Project> {
 
 //        project.configurations['compile'].dependencies.add(project.dependencies.create("com.datastax.cassandra:cassandra-driver-core:3.2.0"))
         addStartEmbeddedCassandraTask(project)
+        addStopEmbeddedCassandraTask(project)
 
         extendAllTasksWithCassandraOptions(project)
 
@@ -28,6 +29,12 @@ class GradleCassandraPlugin implements Plugin<Project> {
     private static void addStartEmbeddedCassandraTask(Project project) {
         project.task(group: TASK_GROUP_NAME, description: 'Start an embedded Cassandra instance', 'startCassandra').doFirst {
             startCassandra(project)
+        }
+    }
+
+    private static void addStopEmbeddedCassandraTask(Project project) {
+        project.task(group: TASK_GROUP_NAME, description: 'Stop an embedded Cassandra instance', 'stopCassandra').doFirst {
+            stopCassandra()
         }
     }
 
@@ -61,6 +68,14 @@ class GradleCassandraPlugin implements Plugin<Project> {
         def pluginExtension = project[PLUGIN_EXTENSION_NAME] as GradleCassandraPluginExtension
         try {
             EmbeddedCassandraServerHelper.startEmbeddedCassandra('/cassandra.yaml', pluginExtension.timeout)
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
+    }
+
+    private static stopCassandra() {
+        try {
+            EmbeddedCassandraServerHelper.stopEmbeddedCassandra()
         } catch (Exception e) {
             e.printStackTrace()
         }

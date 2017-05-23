@@ -51,7 +51,7 @@ class CassandraPluginTasksSpec extends Specification {
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
-                .withArguments("startCassandra", "-S", "-Dorg.gradle.testkit.debug=true")
+                .withArguments("startCassandra", "stopCassandra")
                 .build()
 
         then:
