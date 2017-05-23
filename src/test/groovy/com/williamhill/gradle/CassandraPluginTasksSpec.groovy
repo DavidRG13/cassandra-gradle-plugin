@@ -25,21 +25,32 @@ class CassandraPluginTasksSpec extends Specification {
                         }
                         dependencies {
                             classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
+                            classpath "org.apache.cassandra:cassandra-all:3.10"
+                            classpath "com.datastax.cassandra:cassandra-driver-core:3.2.0"
                         }
                     }
 
+                    apply plugin: 'java'
                     apply plugin: com.williamhill.gradle.GradleCassandraPlugin
+                    
+                    repositories {
+                        jcenter()
+                    }
+                    dependencies {
+                        compile "org.apache.cassandra:cassandra-all:3.10"
+                        compile "com.datastax.cassandra:cassandra-driver-core:3.2.0"
+                    }   
                     """
 
         when:
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
-                .withArguments("startCassandra", "--stacktrace")
+                .withArguments("startCassandra", "-S")
                 .build()
 
         then:
-        result.getOutput().contains("")
+        !result.getOutput().contains("NullPointerException")
         result.task(":startCassandra").getOutcome() == TaskOutcome.SUCCESS
     }
 
