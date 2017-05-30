@@ -21,7 +21,6 @@ class CassandraPluginTasksSpec extends Specification {
                     buildscript {
                         repositories {
                             mavenLocal()
-                            jcenter()
                         }
                         dependencies {
                             classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
