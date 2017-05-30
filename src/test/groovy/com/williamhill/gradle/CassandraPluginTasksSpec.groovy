@@ -25,26 +25,14 @@ class CassandraPluginTasksSpec extends Specification {
                         }
                         dependencies {
                             classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
-                            classpath "org.cassandraunit:cassandra-unit:3.1.4.0-SNAPSHOT"
-                            classpath "org.apache.cassandra:cassandra-all:3.10"
-                            classpath "com.datastax.cassandra:cassandra-driver-core:3.2.0"
                         }
                     }
 
-                    apply plugin: 'java'
                     apply plugin: com.williamhill.gradle.GradleCassandraPlugin
                     
                     cassandra {
                         timeout 200000
                     }
-                    
-                    repositories {
-                        jcenter()
-                    }
-                    dependencies {
-                        compile "org.apache.cassandra:cassandra-all:3.10"
-                        compile "com.datastax.cassandra:cassandra-driver-core:3.2.0"
-                    }   
                     """
 
         when:
@@ -55,41 +43,7 @@ class CassandraPluginTasksSpec extends Specification {
                 .build()
 
         then:
-        !result.getOutput().contains("NullPointerException")
+        result.getOutput().contains("Starting cassandra")
         result.task(":startCassandra").getOutcome() == TaskOutcome.SUCCESS
     }
-
-//    def 'individual tasks can declare a dependency on a running cassandra instance'() {
-//        given:
-//        buildFile << """
-//                    buildscript {
-//                        repositories {
-//                            mavenLocal()
-//                            jcenter()
-//                        }
-//                        dependencies {
-//                            classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
-//                        }
-//                    }
-//
-//                    apply plugin: "com.williamhill.gradle.GradleCassandraPlugin"
-//
-//                    task testTask {
-//                        runWithCassandra = true
-//                    }
-//                    """
-//
-//        when:
-//        def result = GradleRunner.create()
-//                .withDebug(true)
-//                .withProjectDir(testProjectDir.root)
-//                .withArguments("testTask")
-//                .build()
-//        println(buildFile.text)
-//
-//
-//        then:
-//        result.getOutput().contains("")
-//        result.task(":testTask").getOutcome() == TaskOutcome.SUCCESS
-//    }
 }

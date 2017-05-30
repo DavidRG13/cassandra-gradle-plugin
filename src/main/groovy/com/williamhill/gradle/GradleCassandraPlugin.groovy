@@ -1,21 +1,20 @@
 package com.williamhill.gradle
 
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 
 class GradleCassandraPlugin implements Plugin<Project> {
 
+    private static final String CASSANDRA_UNIT = "cassandra-unit-3.1.4.0-SNAPSHOT";
+    private static final String CASSANDRA_STARTER = "sh " + CASSANDRA_UNIT + "/bin/cu-starter";
     static final String PLUGIN_EXTENSION_NAME = 'cassandra'
     static final String TASK_GROUP_NAME = 'Cassandra'
+    static private Process cassandraProcess
 
     @Override
     void apply(final Project project) {
-//        project.dependencies.create("org.apache.cassandra:cassandra-all:3.9")
-//        project.dependencies.create("com.datastax.cassandra:cassandra-driver-core:3.2.0")
-
-//        project.configurations['compile'].dependencies.add(project.dependencies.create("com.datastax.cassandra:cassandra-driver-core:3.2.0"))
+        configureTaskProperties(project)
         addStartEmbeddedCassandraTask(project)
         addStopEmbeddedCassandraTask(project)
 
@@ -26,9 +25,13 @@ class GradleCassandraPlugin implements Plugin<Project> {
         }
     }
 
+    private static void configureTaskProperties(Project project) {
+        project.extensions.create(PLUGIN_EXTENSION_NAME, GradleCassandraPluginExtension)
+    }
+
     private static void addStartEmbeddedCassandraTask(Project project) {
-        project.task(group: TASK_GROUP_NAME, description: 'Start an embedded Cassandra instance', 'startCassandra').doFirst {
-            startCassandra(project)
+        project.task(group: TASK_GROUP_NAME, description: 'Start an embedded Cassandra instance', 'startCassandra2').doFirst {
+            startCassandraFromProject(project)
         }
     }
 
@@ -58,26 +61,30 @@ class GradleCassandraPlugin implements Plugin<Project> {
             def task = it
             if (task.runWithCassandra) {
                 task.doFirst {
-                    startCassandra(project)
+                    startCassandraFromProject(project)
                 }
             }
         }
     }
 
-    private static startCassandra(final Project project) {
+    private static startCassandraFromProject(final Project project) {
         def pluginExtension = project[PLUGIN_EXTENSION_NAME] as GradleCassandraPluginExtension
+        startCassandra(pluginExtension.port, pluginExtension.timeout)
+    }
+
+    static startCassandra(final int port, final long timeout) {
+        def path = getClass().getResource("/startCassandra.sh").path
         try {
-            EmbeddedCassandraServerHelper.startEmbeddedCassandra('/cassandra.yaml', pluginExtension.timeout)
-        } catch (Exception e) {
+            new ProcessBuilder("sh ${path}").start()
+            // sh cassandra-unit-3.1.4.0-SNAPSHOT/bin/cu-starter -p 9042 -t 20000 -s cassandra-unit-3.1.4.0-SNAPSHOT/samples/schema.cql -d cassandra-unit-3.1.4.0-SNAPSHOT
+            def command = "${CASSANDRA_STARTER} -p ${port} -t ${timeout} -s ${CASSANDRA_UNIT}/samples/schema.cql -d ${CASSANDRA_UNIT}"
+            cassandraProcess = new ProcessBuilder(command).start()
+        } catch (IOException e) {
             e.printStackTrace()
         }
     }
 
     private static stopCassandra() {
-        try {
-            EmbeddedCassandraServerHelper.stopEmbeddedCassandra()
-        } catch (Exception e) {
-            e.printStackTrace()
-        }
+        cassandraProcess.destroy()
     }
 }

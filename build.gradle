@@ -23,8 +23,8 @@ dependencies {
     }
 }
 
-if (project.name.contains('cassandra-ticket-registry')) {
-    exclude(group: "org.apache.logging.log4j", module:"log4j-slf4j-impl")
+configurations.all {
+    exclude group: "org.slf4j"
 }
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
