@@ -4,7 +4,8 @@ class GradleCassandraPluginExtension {
 
     private int timeout = 120_000L
     private int port = 9042
-    private String cassandraYamlLocation = '/cassandra.yaml'
+    private String schemaFilePath;
+    private String cassandraUnit;
 
     int getTimeout() {
         timeout
@@ -18,14 +19,6 @@ class GradleCassandraPluginExtension {
         }
     }
 
-    String getCassandraYamlLocation() {
-        cassandraYamlLocation
-    }
-
-    void setCassandraYamlLocation(String location) {
-        this.cassandraYamlLocation = location
-    }
-
     int getPort() {
         return port
     }
@@ -36,5 +29,21 @@ class GradleCassandraPluginExtension {
 
     void setTimeout(final int timeout) {
         this.timeout = timeout
+    }
+
+    String getSchemaFilePath() {
+        return schemaFilePath
+    }
+
+    void setSchemaFilePath(final String schemaFilePath) {
+        this.schemaFilePath = schemaFilePath
+    }
+
+    String getCassandraUnit() {
+        return cassandraUnit
+    }
+
+    void setCassandraUnit(final String cassandraUnit) {
+        this.cassandraUnit = cassandraUnit
     }
 }

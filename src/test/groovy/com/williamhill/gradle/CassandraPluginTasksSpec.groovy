@@ -42,7 +42,7 @@ class CassandraPluginTasksSpec extends Specification {
                 .build()
 
         then:
-        result.getOutput().contains("Starting cassandra")
+        result.getOutput().contains("Starting...")
         result.task(":startCassandra").getOutcome() == TaskOutcome.SUCCESS
     }
 }
