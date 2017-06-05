@@ -21,16 +21,18 @@ class CassandraPluginTasksSpec extends Specification {
                     buildscript {
                         repositories {
                             mavenLocal()
+                            jcenter()
                         }
                         dependencies {
                             classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
                         }
                     }
-
+                    
                     apply plugin: com.williamhill.gradle.GradleCassandraPlugin
                     
                     cassandra {
                         timeout 200000
+                        schemaFilePath "src/test/resources/schema.cql"
                     }
                     """
 

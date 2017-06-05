@@ -32,7 +32,7 @@ class GradleCassandraPlugin implements Plugin<Project> {
     }
 
     private static void addStartEmbeddedCassandraTask(Project project) {
-        project.task(group: TASK_GROUP_NAME, description: 'Start an embedded Cassandra instance', 'startCassandra2').doFirst {
+        project.task(group: TASK_GROUP_NAME, description: 'Start an embedded Cassandra instance', 'startCassandra').doFirst {
             startCassandraFromProject(project)
         }
     }
