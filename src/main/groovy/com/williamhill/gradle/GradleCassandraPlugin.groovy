@@ -4,10 +4,12 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 
+import static com.williamhill.gradle.CassandraUnit.startCassandra
+
 class GradleCassandraPlugin implements Plugin<Project> {
 
-    private static final String CASSANDRA_UNIT = "cassandra-unit-3.1.4.0-SNAPSHOT";
-    private static final String CASSANDRA_STARTER = "sh " + CASSANDRA_UNIT + "/bin/cu-starter";
+    private static final String CASSANDRA_UNIT = "cassandra-unit-3.1.4.0-SNAPSHOT"
+    private static final String CASSANDRA_STARTER = "sh " + CASSANDRA_UNIT + "/bin/cu-starter"
     static final String PLUGIN_EXTENSION_NAME = 'cassandra'
     static final String TASK_GROUP_NAME = 'Cassandra'
     static private Process cassandraProcess
@@ -68,23 +70,25 @@ class GradleCassandraPlugin implements Plugin<Project> {
     }
 
     private static startCassandraFromProject(final Project project) {
-        def pluginExtension = project[PLUGIN_EXTENSION_NAME] as GradleCassandraPluginExtension
-        startCassandra(pluginExtension.port, pluginExtension.timeout)
-    }
+        def pluginExt = project[PLUGIN_EXTENSION_NAME] as GradleCassandraPluginExtension
+        def port = pluginExt.port
+        if (pluginExt.schemaFilePath == null || pluginExt.schemaFilePath.isEmpty()) {
+            System.out.println("SchemaFilePath has to be provided");
+        } else if (CassandraUnit.portIsNotListening(port)) {
+            startCassandra(port, pluginExt.timeout, pluginExt.schemaFilePath, pluginExt.cassandraUnit)
 
-    static startCassandra(final int port, final long timeout) {
-        def path = getClass().getResource("/startCassandra.sh").path
-        try {
-            new ProcessBuilder("sh ${path}").start()
-            // sh cassandra-unit-3.1.4.0-SNAPSHOT/bin/cu-starter -p 9042 -t 20000 -s cassandra-unit-3.1.4.0-SNAPSHOT/samples/schema.cql -d cassandra-unit-3.1.4.0-SNAPSHOT
-            def command = "${CASSANDRA_STARTER} -p ${port} -t ${timeout} -s ${CASSANDRA_UNIT}/samples/schema.cql -d ${CASSANDRA_UNIT}"
-            cassandraProcess = new ProcessBuilder(command).start()
-        } catch (IOException e) {
-            e.printStackTrace()
+            while (CassandraUnit.portIsNotListening(port)) {
+                System.out.println("Starting...")
+                try {
+                    Thread.sleep(750)
+                } catch (InterruptedException e) {
+                    e.printStackTrace()
+                }
+            }
         }
     }
 
     private static stopCassandra() {
-        cassandraProcess.destroy()
+        CassandraUnit.stopCassandra()
     }
 }
