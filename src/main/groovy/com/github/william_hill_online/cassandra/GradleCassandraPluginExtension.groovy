@@ -4,8 +4,8 @@ class GradleCassandraPluginExtension {
 
     private int timeout = 120_000L
     private int port = 9042
-    private String schemaFilePath;
-    private String cassandraUnit;
+    private String schemaFilePath
+    private String cassandraUnit
 
     int getTimeout() {
         timeout
