@@ -1,4 +1,4 @@
-package com.github.william_hill_online.gradle
+package com.github.william_hill_online.cassandra
 
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
