@@ -30,7 +30,7 @@ Configure your Cassandra instance inside a ```cassandra``` block:
 ```
 cassandra {
     port 9042
-    schemaFilePath src/test/resources/schema.cql
+    schemaFilePath "src/test/resources/schema.cql"
     ...
 }
 ```
