@@ -5,15 +5,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 
-import static CassandraUnit.startCassandra
-
 class GradleCassandraPlugin implements Plugin<Project> {
 
-    private static final String CASSANDRA_UNIT = "cassandra-unit-3.1.4.0-SNAPSHOT"
-    private static final String CASSANDRA_STARTER = "sh " + CASSANDRA_UNIT + "/bin/cu-starter"
     static final String PLUGIN_EXTENSION_NAME = 'cassandra'
     static final String TASK_GROUP_NAME = 'Cassandra'
-    static private Process cassandraProcess
 
     @Override
     void apply(final Project project) {
@@ -78,7 +73,7 @@ class GradleCassandraPlugin implements Plugin<Project> {
         } else if (CassandraUnit.portIsListening(port)) {
             throw new GradleException("Port $port already in use")
         } else if (CassandraUnit.portIsNotListening(port)) {
-            startCassandra(port, pluginExt.timeout, pluginExt.schemaFilePath, pluginExt.cassandraUnit)
+            CassandraUnit.startCassandra(port, pluginExt.timeout, pluginExt.schemaFilePath, pluginExt.cassandraUnit)
 
             while (CassandraUnit.portIsNotListening(port)) {
                 println "Starting..."
