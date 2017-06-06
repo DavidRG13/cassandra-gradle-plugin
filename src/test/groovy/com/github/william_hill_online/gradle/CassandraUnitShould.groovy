@@ -1,4 +1,4 @@
-package com.williamhill.gradle
+package com.github.william_hill_online.gradle
 
 import spock.lang.Specification
 

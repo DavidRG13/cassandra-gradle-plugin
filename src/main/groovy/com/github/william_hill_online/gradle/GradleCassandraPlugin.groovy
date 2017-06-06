@@ -1,11 +1,11 @@
-package com.williamhill.gradle
+package com.github.william_hill_online.gradle
 
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 
-import static com.williamhill.gradle.CassandraUnit.startCassandra
+import static CassandraUnit.startCassandra
 
 class GradleCassandraPlugin implements Plugin<Project> {
 

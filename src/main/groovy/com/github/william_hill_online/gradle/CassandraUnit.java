@@ -1,4 +1,4 @@
-package com.williamhill.gradle;
+package com.github.william_hill_online.gradle;
 
 import org.apache.commons.io.FileUtils;
 

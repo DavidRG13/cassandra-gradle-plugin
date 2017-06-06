@@ -1,4 +1,4 @@
-group 'com.williamhill'
+group 'com.github.william_hill_online'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'

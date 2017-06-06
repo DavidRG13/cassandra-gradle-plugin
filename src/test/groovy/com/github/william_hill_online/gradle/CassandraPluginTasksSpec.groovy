@@ -1,4 +1,4 @@
-package com.williamhill.gradle
+package com.github.william_hill_online.gradle
 
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
