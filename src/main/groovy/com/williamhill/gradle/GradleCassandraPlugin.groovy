@@ -1,5 +1,6 @@
 package com.williamhill.gradle
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -72,13 +73,15 @@ class GradleCassandraPlugin implements Plugin<Project> {
     private static startCassandraFromProject(final Project project) {
         def pluginExt = project[PLUGIN_EXTENSION_NAME] as GradleCassandraPluginExtension
         def port = pluginExt.port
-        if (pluginExt.schemaFilePath == null || pluginExt.schemaFilePath.isEmpty()) {
-            System.out.println("SchemaFilePath has to be provided");
+        if (notProvided(pluginExt.schemaFilePath)) {
+            throw new GradleException("SchemaFilePath has to be provided")
+        } else if (CassandraUnit.portIsListening(port)) {
+            throw new GradleException("Port $port already in use")
         } else if (CassandraUnit.portIsNotListening(port)) {
             startCassandra(port, pluginExt.timeout, pluginExt.schemaFilePath, pluginExt.cassandraUnit)
 
             while (CassandraUnit.portIsNotListening(port)) {
-                System.out.println("Starting...")
+                println "Starting..."
                 try {
                     Thread.sleep(750)
                 } catch (InterruptedException e) {
@@ -90,5 +93,9 @@ class GradleCassandraPlugin implements Plugin<Project> {
 
     private static stopCassandra() {
         CassandraUnit.stopCassandra()
+    }
+
+    private static boolean notProvided(String parameter) {
+        parameter == null || parameter.isEmpty()
     }
 }

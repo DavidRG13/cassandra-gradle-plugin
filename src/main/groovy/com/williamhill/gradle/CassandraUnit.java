@@ -58,10 +58,14 @@ public class CassandraUnit {
     }
 
     static boolean portIsNotListening(final int port) {
+        return !portIsListening(port);
+    }
+
+    static boolean portIsListening(final int port) {
         try(Socket socket = new Socket("localhost", port)) {
-            return false;
-        } catch (IOException e) {
             return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 }
