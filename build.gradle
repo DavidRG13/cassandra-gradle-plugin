@@ -1,5 +1,5 @@
 group 'com.github.william_hill_online'
-version '1.0-SNAPSHOT'
+version '0.1'
 
 buildscript {
   repositories {
