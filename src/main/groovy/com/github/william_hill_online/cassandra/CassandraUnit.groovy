@@ -6,27 +6,31 @@ class CassandraUnit {
     private static final String CASSANDRA_STARTER = CASSANDRA_UNIT + "/bin/cu-starter"
     private static final String BINARY_FILE = "cassandra-unit-3.1.4.0-SNAPSHOT-bin.tar.gz"
 
-    static void  startCassandra(final int port, final long timeout, final String schemaFilePath, final String cassandraUnit) {
-        File temp = new File("temp")
+    static void  startCassandra(final int port, final long timeout, final String schemaFilePath, final String cassandraUnit, String workingDirectory) {
+        File temp = new File(workingDirectory, "temp")
         if (temp.exists()) {
             temp.listFiles().each {it -> it.delete()}
         } else {
             temp.mkdir()
         }
 
+        new File(workingDirectory).mkdir()
+
         try {
-            File cu = new File(CASSANDRA_UNIT)
+            File cu = new File(workingDirectory, CASSANDRA_UNIT)
             if (!cu.exists()) {
                 if (cassandraUnit == null || cassandraUnit.isEmpty()) {
                     String downloadLink = "https://github.com/William-Hill-Online/cassandra-unit/releases/download/SNAPSHOT/" + BINARY_FILE
-                    downloadCassandraUnitFrom(downloadLink)
+                    downloadCassandraUnitFrom(downloadLink, workingDirectory)
                 } else {
-                    downloadCassandraUnitFrom(cassandraUnit)
+                    downloadCassandraUnitFrom(cassandraUnit, workingDirectory)
                 }
-                new ProcessBuilder("tar", "-xvf", BINARY_FILE).start().waitFor()
+                def string = "$workingDirectory/$BINARY_FILE"
+                println string
+                new ProcessBuilder("tar", "-xf", string, "-C", "$workingDirectory").start().waitFor()
             }
 
-            String[] strings = ["sh", CASSANDRA_STARTER, "-p", String.valueOf(port), "-t", String.valueOf(timeout), "-s", schemaFilePath, "-d", CASSANDRA_UNIT]
+            String[] strings = ["sh", "$workingDirectory/$CASSANDRA_STARTER", "-p", String.valueOf(port), "-t", String.valueOf(timeout), "-s", schemaFilePath, "-d", "$workingDirectory/$CASSANDRA_UNIT"]
             new ProcessBuilder(strings).redirectErrorStream(true).redirectOutput(new File(temp, "log")).start()
         } catch (IOException | InterruptedException e) {
             e.printStackTrace()
@@ -41,8 +45,8 @@ class CassandraUnit {
         }
     }
 
-    private static void downloadCassandraUnitFrom(final String downloadLink) throws IOException {
-        new File(BINARY_FILE) << new URL(downloadLink).getBytes()
+    private static void downloadCassandraUnitFrom(final String downloadLink, final String workingDirectory) throws IOException {
+        new File(workingDirectory, BINARY_FILE) << new URL(downloadLink).getBytes()
     }
 
     static boolean portIsNotListening(final int port) {

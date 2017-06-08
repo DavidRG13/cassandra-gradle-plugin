@@ -9,6 +9,7 @@ class GradleCassandraPlugin implements Plugin<Project> {
 
     static final String PLUGIN_EXTENSION_NAME = 'cassandra'
     static final String TASK_GROUP_NAME = 'Cassandra'
+    static final String GRADLE_WORKING_DIRECTORY = "build"
 
     @Override
     void apply(final Project project) {
@@ -73,7 +74,7 @@ class GradleCassandraPlugin implements Plugin<Project> {
         } else if (CassandraUnit.portIsListening(port)) {
             throw new GradleException("Port $port already in use")
         } else if (CassandraUnit.portIsNotListening(port)) {
-            CassandraUnit.startCassandra(port, pluginExt.timeout, pluginExt.schemaFilePath, pluginExt.cassandraUnit)
+            CassandraUnit.startCassandra(port, pluginExt.timeout, pluginExt.schemaFilePath, pluginExt.cassandraUnit, GRADLE_WORKING_DIRECTORY)
 
             while (CassandraUnit.portIsNotListening(port)) {
                 println "Starting..."

@@ -24,11 +24,11 @@ class CassandraPluginTasksSpec extends Specification {
                             jcenter()
                         }
                         dependencies {
-                            classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
+                            classpath "com.github.william_hill_online:cassandra-gradle-plugin:0.1"
                         }
                     }
                     
-                    apply plugin: com.williamhill.gradle.GradleCassandraPlugin
+                    apply plugin: com.github.william_hill_online.cassandra.GradleCassandraPlugin
                     
                     cassandra {
                         timeout 200000
@@ -41,6 +41,7 @@ class CassandraPluginTasksSpec extends Specification {
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
                 .withArguments("startCassandra", "stopCassandra")
+                .withPluginClasspath([new File("META-INF/gradle-plugins/com.williamhill.cassandra.properties")])
                 .build()
 
         then:
@@ -57,11 +58,11 @@ class CassandraPluginTasksSpec extends Specification {
                             jcenter()
                         }
                         dependencies {
-                            classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
+                            classpath "com.github.william_hill_online:cassandra-gradle-plugin:0.1"
                         }
                     }
                     
-                    apply plugin: com.williamhill.gradle.GradleCassandraPlugin
+                    apply plugin: com.github.william_hill_online.cassandra.GradleCassandraPlugin
                     
                     cassandra {
                         port 9042
@@ -93,11 +94,11 @@ class CassandraPluginTasksSpec extends Specification {
                             jcenter()
                         }
                         dependencies {
-                            classpath "com.williamhill:cassandra-gradle-plugin:1.0-SNAPSHOT"
+                            classpath "com.github.william_hill_online:cassandra-gradle-plugin:0.1"
                         }
                     }
                     
-                    apply plugin: com.williamhill.gradle.GradleCassandraPlugin
+                    apply plugin: com.github.william_hill_online.cassandra.GradleCassandraPlugin
                     
                     cassandra {
                         timeout 200000
