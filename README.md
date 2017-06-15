@@ -10,7 +10,7 @@ Enable the plugin in your gradle build:
 
 ```groovy
 plugins {
-  id 'com.williamhill.cassandra' version '0.2'
+  id 'com.williamhill.cassandra' version '0.3'
 }
 ```
 
