@@ -62,6 +62,9 @@ class GradleCassandraPlugin implements Plugin<Project> {
                 task.doFirst {
                     startCassandraFromProject(project)
                 }
+                task.doLast {
+                    stopCassandra()
+                }
             }
         }
     }
