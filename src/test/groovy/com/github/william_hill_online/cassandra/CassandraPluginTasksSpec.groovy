@@ -21,7 +21,7 @@ class CassandraPluginTasksSpec extends Specification {
         given:
         buildFile << """
                     plugins {
-                        id 'com.williamhill.cassandra'
+                        id 'com.github.william-hill-online.cassandra'
                     }
 
                     cassandra {
@@ -47,7 +47,7 @@ class CassandraPluginTasksSpec extends Specification {
         given:
         buildFile << """
                     plugins {
-                        id 'com.williamhill.cassandra'
+                        id 'com.github.william-hill-online.cassandra'
                     }
 
                     cassandra {
@@ -76,7 +76,7 @@ class CassandraPluginTasksSpec extends Specification {
         given:
         buildFile << """
                     plugins {
-                        id 'com.williamhill.cassandra'
+                        id 'com.github.william-hill-online.cassandra'
                     }
 
                     cassandra {

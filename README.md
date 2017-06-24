@@ -1,3 +1,4 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.william-hill-online/cassandra-gradle-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.william-hill-online/cassandra-gradle-plugin)
 ## Gradle Cassandra Plugin ##
 
 The Gradle Cassandra Plugin allows you to run an embedded instance of Cassandra from your gradle build. It is based on the [Cassandra Unit](https://github.com/jsevellec/cassandra-unit).
