@@ -6,7 +6,7 @@ class CassandraUnitShould extends Specification {
 
     def 'return true if port is listening'() {
         given:
-        def port = 9042
+        def port = 9044
         def socket = new ServerSocket(port)
 
         expect:
@@ -16,6 +16,6 @@ class CassandraUnitShould extends Specification {
 
     def 'return false if port is not listening'() {
         expect:
-        CassandraUnit.portIsNotListening(9042)
+        CassandraUnit.portIsNotListening(9043)
     }
 }

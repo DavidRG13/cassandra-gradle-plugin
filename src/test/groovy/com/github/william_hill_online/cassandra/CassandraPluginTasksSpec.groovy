@@ -10,26 +10,20 @@ class CassandraPluginTasksSpec extends Specification {
 
     @Rule final TemporaryFolder testProjectDir = new TemporaryFolder()
     File buildFile
+    List pluginClasspath
 
     def setup() throws IOException {
         buildFile = testProjectDir.newFile("build.gradle")
+        pluginClasspath = getClass().classLoader.findResource('plugin-classpath.txt').readLines().collect { new File(it) }
     }
 
     def 'startCassandra task should start an embedded cassandra instance'() {
         given:
         buildFile << """
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                            jcenter()
-                        }
-                        dependencies {
-                            classpath "com.github.william_hill_online:cassandra-gradle-plugin:0.1"
-                        }
+                    plugins {
+                        id 'com.williamhill.cassandra'
                     }
-                    
-                    apply plugin: com.github.william_hill_online.cassandra.GradleCassandraPlugin
-                    
+
                     cassandra {
                         timeout 200000
                         schemaFilePath "src/test/resources/schema.cql"
@@ -41,7 +35,7 @@ class CassandraPluginTasksSpec extends Specification {
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
                 .withArguments("startCassandra", "stopCassandra")
-                .withPluginClasspath([new File("META-INF/gradle-plugins/com.williamhill.cassandra.properties")])
+                .withPluginClasspath(pluginClasspath)
                 .build()
 
         then:
@@ -52,35 +46,28 @@ class CassandraPluginTasksSpec extends Specification {
     def 'startCassandra task should fail if port already in use'() {
         given:
         buildFile << """
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                            jcenter()
-                        }
-                        dependencies {
-                            classpath "com.github.william_hill_online:cassandra-gradle-plugin:0.1"
-                        }
+                    plugins {
+                        id 'com.williamhill.cassandra'
                     }
-                    
-                    apply plugin: com.github.william_hill_online.cassandra.GradleCassandraPlugin
-                    
+
                     cassandra {
-                        port 9042
+                        port 9043
                         schemaFilePath "src/test/resources/schema.cql"
                     }
                     """
 
-        def socket = new ServerSocket(9042)
+        def socket = new ServerSocket(9043)
 
         when:
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
                 .withArguments("startCassandra")
+                .withPluginClasspath(pluginClasspath)
                 .buildAndFail()
 
         then:
-        result.getOutput().contains("Port 9042 already in use")
+        result.getOutput().contains("Port 9043 already in use")
         result.task(":startCassandra").getOutcome() == TaskOutcome.FAILED
         socket.close()
     }
@@ -88,18 +75,10 @@ class CassandraPluginTasksSpec extends Specification {
     def "startCassandra task should fail if schema isn't provided"() {
         given:
         buildFile << """
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                            jcenter()
-                        }
-                        dependencies {
-                            classpath "com.github.william_hill_online:cassandra-gradle-plugin:0.1"
-                        }
+                    plugins {
+                        id 'com.williamhill.cassandra'
                     }
-                    
-                    apply plugin: com.github.william_hill_online.cassandra.GradleCassandraPlugin
-                    
+
                     cassandra {
                         timeout 200000
                     }
@@ -109,6 +88,7 @@ class CassandraPluginTasksSpec extends Specification {
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
+                .withPluginClasspath(pluginClasspath)
                 .withArguments("startCassandra")
                 .buildAndFail()
 
