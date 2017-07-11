@@ -11,7 +11,7 @@ Enable the plugin in your gradle build:
 
 ```groovy
 plugins {
-  id 'com.williamhill.cassandra' version '0.3'
+  id 'com.williamhill.cassandra' version '0.4'
 }
 ```
 
@@ -43,7 +43,7 @@ The following properties are configurable:
 * ```timeout``` Timeout for Cassandra to start (defaults to **'20000'**)
 * ```port```: The port where Cassandra will be listening (defaults to **'9042'**)
 * ```cassandraUnit```: The URL from where [CassandraUnit](https://github.com/jsevellec/cassandra-unit) binary artifact will be downloaded (defaults to **'https://github.com/William-Hill-Online/cassandra-unit/releases/download/SNAPSHOT/cassandra-unit-3.1.4.0-SNAPSHOT-bin.tar.gz'**). Useful of you are in a net with restricted access.
-* ```schemaFilePath```: Schema that will be created when Cassandra is up. **'This is required'**.
+* ```schemaFilePath```: Schema that will be created when Cassandra is up. **'This is required'**. If you need to create more than one, separate them with a ",".
 
 ### Tasks ###
 
