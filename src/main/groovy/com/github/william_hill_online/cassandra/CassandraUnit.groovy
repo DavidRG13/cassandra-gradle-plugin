@@ -20,7 +20,7 @@ class CassandraUnit {
             File cu = new File(workingDirectory, CASSANDRA_UNIT)
             if (!cu.exists()) {
                 if (cassandraUnit == null || cassandraUnit.isEmpty()) {
-                    String downloadLink = "https://github.com/William-Hill-Online/cassandra-unit/releases/download/SNAPSHOT/" + BINARY_FILE
+                    String downloadLink = "https://github.com/William-Hill-Online/cassandra-unit/releases/download/Snapshot2/" + BINARY_FILE
                     downloadCassandraUnitFrom(downloadLink, workingDirectory)
                 } else {
                     downloadCassandraUnitFrom(cassandraUnit, workingDirectory)
