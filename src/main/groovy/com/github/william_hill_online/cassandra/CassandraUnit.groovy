@@ -7,13 +7,6 @@ class CassandraUnit {
     private static final String BINARY_FILE = "cassandra-unit-3.1.4.0-SNAPSHOT-bin.tar.gz"
 
     static void  startCassandra(final int port, final long timeout, final String schemaFilePath, final String cassandraUnit, String workingDirectory) {
-        File temp = new File(workingDirectory, "temp")
-        if (temp.exists()) {
-            temp.listFiles().each {it -> it.delete()}
-        } else {
-            temp.mkdir()
-        }
-
         new File(workingDirectory).mkdir()
 
         try {
@@ -31,7 +24,7 @@ class CassandraUnit {
             }
 
             String[] strings = ["sh", "$workingDirectory/$CASSANDRA_STARTER", "-p", String.valueOf(port), "-t", String.valueOf(timeout), "-s", schemaFilePath, "-d", "$workingDirectory/$CASSANDRA_UNIT"]
-            new ProcessBuilder(strings).redirectErrorStream(true).redirectOutput(new File(temp, "log")).start()
+            new ProcessBuilder(strings).redirectErrorStream(true).redirectOutput(new File(cu, "cassandra-unit.log")).start()
         } catch (IOException | InterruptedException e) {
             e.printStackTrace()
         }
