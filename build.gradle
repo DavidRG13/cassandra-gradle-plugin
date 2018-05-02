@@ -23,6 +23,13 @@ dependencies {
     }
 }
 
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+
+    publishAlways()
+}
+
 pluginBundle {
   website = POM_URL
   vcsUrl = POM_URL
