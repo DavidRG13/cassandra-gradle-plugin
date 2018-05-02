@@ -10,11 +10,35 @@ class CassandraPluginTasksSpec extends Specification {
 
     @Rule final TemporaryFolder testProjectDir = new TemporaryFolder()
     File buildFile
-    List pluginClasspath
 
     def setup() throws IOException {
         buildFile = testProjectDir.newFile("build.gradle")
-        pluginClasspath = getClass().classLoader.findResource('plugin-classpath.txt').readLines().collect { new File(it) }
+    }
+
+    def 'cassandra tasks should exist'() {
+        given:
+        buildFile << """
+                    plugins {
+                        id "com.github.william-hill-online.cassandra"
+                    }
+                    
+                    cassandra {
+                        timeout 200000
+                        schemaFilePath "src/test/resources/schema.cql"
+                    }
+                    """
+
+        when:
+        def result = GradleRunner.create()
+                .withDebug(true)
+                .withProjectDir(testProjectDir.root)
+                .withArguments("tasks", "--all")
+                .withPluginClasspath()
+                .build()
+
+        then:
+        result.getOutput().contains("startCassandra")
+        result.getOutput().contains("stopCassandra")
     }
 
     def 'startCassandra task should start an embedded cassandra instance'() {
@@ -35,7 +59,7 @@ class CassandraPluginTasksSpec extends Specification {
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
                 .withArguments("startCassandra", "stopCassandra")
-                .withPluginClasspath(pluginClasspath)
+                .withPluginClasspath()
                 .build()
 
         then:
@@ -63,7 +87,7 @@ class CassandraPluginTasksSpec extends Specification {
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
                 .withArguments("startCassandra")
-                .withPluginClasspath(pluginClasspath)
+                .withPluginClasspath()
                 .buildAndFail()
 
         then:
@@ -88,7 +112,7 @@ class CassandraPluginTasksSpec extends Specification {
         def result = GradleRunner.create()
                 .withDebug(true)
                 .withProjectDir(testProjectDir.root)
-                .withPluginClasspath(pluginClasspath)
+                .withPluginClasspath()
                 .withArguments("startCassandra")
                 .buildAndFail()
 
