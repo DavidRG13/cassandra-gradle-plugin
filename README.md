@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/William-Hill-Online/cassandra-gradle-plugin.svg?branch=master)](https://travis-ci.com/William-Hill-Online/cassandra-gradle-plugin)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.william-hill-online/cassandra-gradle-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.william-hill-online/cassandra-gradle-plugin)
 ## Gradle Cassandra Plugin ##
 
