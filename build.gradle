@@ -3,6 +3,7 @@ plugins {
     id 'maven'
     id 'java-gradle-plugin'
     id "com.gradle.plugin-publish" version "0.9.7"
+    id 'com.gradle.build-scan' version '1.13.1'
 }
 apply plugin: 'signing'
 
@@ -43,20 +44,6 @@ pluginBundle {
     }
   }
 }
-
-task createPluginClasspath {
-    def outputDir = file("${buildDir}/resources/test")
-
-    inputs.files sourceSets.test.runtimeClasspath
-    outputs.dir outputDir
-
-    doLast {
-        outputDir.mkdirs()
-        file("${outputDir}/plugin-classpath.txt").text = sourceSets.test.runtimeClasspath.join('\n',)
-    }
-}
-
-test.dependsOn createPluginClasspath
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.7'
