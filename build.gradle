@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
     compile gradleApi()
+    compile 'org.cassandraunit:cassandra-unit:3.3.0.2'
 
     testCompile gradleTestKit()
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', {
